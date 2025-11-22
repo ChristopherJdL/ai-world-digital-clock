@@ -1,0 +1,197 @@
+:root {
+  color-scheme: light;
+  --page-bg: #ffffff;
+  --page-fg: #050505;
+  --border: #e2e2e2;
+  --card-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+  --title-font: 'Menlo', 'Courier New', 'SFMono-Regular', monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: 'Helvetica Neue', 'SF Pro Display', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  color: var(--page-fg);
+  background: var(--page-bg);
+}
+
+.page-shell {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 3rem;
+}
+
+.hero {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.app-title {
+  font-family: var(--title-font);
+  font-size: clamp(2.75rem, 6vw, 4.5rem);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.clocks-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.75rem;
+}
+
+.clock-card {
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  background: #fff;
+  box-shadow: var(--card-shadow);
+}
+
+.clock-frame-wrapper {
+  position: relative;
+  overflow: hidden;
+}
+
+.clock-frame {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border: none;
+  border-radius: 14px;
+  background: #000;
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.clock-frame.is-ready {
+  opacity: 1;
+}
+
+.clock-skeleton {
+  position: absolute;
+  inset: 0;
+  border-radius: 14px;
+  background: linear-gradient(120deg, #2a1200 0%, #513014 30%, #8a6940 50%, #513014 70%, #2a1200 100%);
+  background-size: 400% 400%;
+  animation: shimmer-wave 6s ease-in-out infinite;
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.4);
+  display: none;
+  pointer-events: none;
+}
+
+.clock-skeleton::before,
+.clock-skeleton::after {
+  content: "";
+  position: absolute;
+  inset: -40%;
+}
+
+.clock-skeleton::before {
+  background: linear-gradient(300deg, rgba(255, 224, 189, 0.25) 0%, rgba(217, 150, 89, 0.4) 45%, rgba(255, 224, 189, 0.15) 80%);
+  background-size: 300% 300%;
+  mix-blend-mode: screen;
+  filter: blur(8px);
+  animation: shimmer-wave-secondary 7.2s ease-in-out infinite;
+}
+
+.clock-skeleton::after {
+  background: radial-gradient(circle, rgba(255, 214, 170, 0.35) 0%, rgba(0, 0, 0, 0) 60%);
+  filter: blur(8px);
+  animation: shimmer-pulse 5.8s ease-in-out infinite;
+}
+
+.clock-skeleton.is-visible {
+  display: block;
+}
+
+.clock-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.clock-logo {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.clock-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.clock-text span {
+  display: block;
+  line-height: 1.2;
+}
+
+.clock-model {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.clock-provider {
+  font-size: 0.85rem;
+  color: #666;
+}
+
+@media (max-width: 768px) {
+  .clock-card {
+    padding: 1rem;
+  }
+
+  .clock-logo {
+    width: 38px;
+    height: 38px;
+  }
+}
+
+@keyframes shimmer-wave {
+  0% {
+    background-position: 200% 0;
+  }
+  40% {
+    background-position: 0 50%;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@keyframes shimmer-wave-secondary {
+  0% {
+    background-position: -150% 0;
+    opacity: 0.2;
+  }
+  60% {
+    background-position: 150% 100%;
+    opacity: 0.5;
+  }
+  100% {
+    background-position: -150% 0;
+    opacity: 0.2;
+  }
+}
+
+@keyframes shimmer-pulse {
+  0%,
+  100% {
+    opacity: 0.25;
+    transform: scale(0.95);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1.05);
+  }
+}

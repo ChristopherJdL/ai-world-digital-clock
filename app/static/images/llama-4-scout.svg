@@ -1,0 +1,6 @@
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Llama 4 Scout logo">
+  <rect width="64" height="64" rx="14" fill="#0d8bff" />
+  <path d="M16 44c8-16 24-16 32 0" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round" />
+  <circle cx="24" cy="24" r="6" fill="none" stroke="#ffffff" stroke-width="3" />
+  <circle cx="40" cy="24" r="6" fill="none" stroke="#ffffff" stroke-width="3" />
+</svg>
