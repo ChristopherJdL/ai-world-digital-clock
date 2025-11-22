@@ -8,6 +8,7 @@ from .config import (
     APP_TITLE,
     CLOCK_MODELS,
     CLOCK_PROMPT_TEMPLATE,
+    LCD_CLOCK_PROMPT_TEMPLATE,
     MAMMOUTH_API_KEY,
     MAMMOUTH_BASE_URL,
     REFRESH_INTERVAL_MS,
@@ -24,6 +25,7 @@ def create_app() -> Flask:
     app.config["REFRESH_INTERVAL_MS"] = REFRESH_INTERVAL_MS
     app.config["CLOCK_MODELS"] = CLOCK_MODELS
     app.config["ALLOWED_MODEL_IDS"] = ALLOWED_MODEL_IDS
+    app.config["CLOCK_PROMPT_TEMPLATE"] = CLOCK_PROMPT_TEMPLATE
 
     provider = None
     if MAMMOUTH_API_KEY:
@@ -34,6 +36,8 @@ def create_app() -> Flask:
             clock_prompt_template=CLOCK_PROMPT_TEMPLATE,
         )
     app.config["CLOCK_PROVIDER"] = provider
+
+    app.config["LCD_CLOCK_PROMPT_TEMPLATE"] = LCD_CLOCK_PROMPT_TEMPLATE
 
     app.register_blueprint(clock_bp)
     app.register_blueprint(home_bp)

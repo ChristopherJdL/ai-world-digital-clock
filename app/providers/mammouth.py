@@ -38,10 +38,15 @@ class MammouthClockProvider:
             self._client = OpenAI(api_key=self._api_key, base_url=self._base_url)
         return self._client
 
-    def render_clock(self, model_id: str, *, current_time: Optional[str] = None) -> str:
-        clock_prompt = self._clock_prompt_template.format(
-            current_time=(current_time or "HH:MM:SS")
-        )
+    def render_clock(
+        self,
+        model_id: str,
+        *,
+        current_time: Optional[str] = None,
+        prompt_template: Optional[str] = None,
+    ) -> str:
+        template = prompt_template or self._clock_prompt_template
+        clock_prompt = template.format(current_time=(current_time or "HH:MM:SS"))
         response = self.client.responses.create(
             model=model_id,
             temperature=self._temperature,

@@ -1,7 +1,7 @@
 """Home page endpoint."""
 from __future__ import annotations
 
-from flask import Blueprint, Response, current_app, render_template, url_for
+from flask import Blueprint, Response, current_app, render_template, request, url_for
 
 home_bp = Blueprint("home", __name__)
 
@@ -13,9 +13,13 @@ def home() -> Response:
     refresh_interval = current_app.config.get("REFRESH_INTERVAL_MS", 60_000)
     clock_models = current_app.config.get("CLOCK_MODELS", [])
 
+    cookie_value = request.cookies.get("lcd_mode")
+    lcd_mode_enabled = True if cookie_value is None else cookie_value == "1"
+
     app_config = {
         "title": app_title,
         "refreshInterval": refresh_interval,
+        "lcdModeEnabled": lcd_mode_enabled,
         "models": [
             {
                 "id": model["id"],

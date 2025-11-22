@@ -2,6 +2,23 @@
   const config = window.APP_CONFIG || {};
   const models = Array.isArray(config.models) ? config.models : [];
   const refreshInterval = Number(config.refreshInterval) || 60000;
+  const initialLcdFlag = typeof config.lcdModeEnabled === 'boolean' ? config.lcdModeEnabled : true;
+  let lcdModeEnabled = initialLcdFlag;
+  let refreshTimerId = null;
+
+  function getCookie(name) {
+    const match = document.cookie.match(new RegExp(`(?:^|; )${name}=([^;]*)`));
+    return match ? decodeURIComponent(match[1]) : null;
+  }
+
+  function setCookie(name, value, days) {
+    const maxAge = days ? days * 24 * 60 * 60 : undefined;
+    let cookie = `${name}=${encodeURIComponent(value)}; path=/; SameSite=Lax`;
+    if (maxAge) {
+      cookie += `; max-age=${maxAge}`;
+    }
+    document.cookie = cookie;
+  }
 
   function setLoadingState($iframe, isLoading) {
     const $skeleton = $iframe.siblings('.clock-skeleton');
@@ -91,16 +108,60 @@
     });
   }
 
+  function syncLcdModeFromCookie() {
+    const cookieValue = getCookie('lcd_mode');
+    if (cookieValue === null) {
+      lcdModeEnabled = true;
+      setCookie('lcd_mode', '1', 365);
+      return;
+    }
+    lcdModeEnabled = cookieValue === '1';
+  }
+
+  function setLcdMode(enabled) {
+    if (lcdModeEnabled === enabled) return;
+    lcdModeEnabled = enabled;
+    setCookie('lcd_mode', enabled ? '1' : '0', 365);
+    updateToggleUI();
+    refreshFrames();
+  }
+
+  function updateToggleUI() {
+    const $toggle = $('#lcdToggle');
+    if (!$toggle.length) return;
+    $toggle.attr('aria-pressed', String(lcdModeEnabled));
+    $toggle.toggleClass('is-active', lcdModeEnabled);
+  }
+
+  function triggerToggleSpark() {
+    const $toggle = $('#lcdToggle');
+    if (!$toggle.length) return;
+    $toggle.addClass('is-sparking');
+    setTimeout(() => {
+      $toggle.removeClass('is-sparking');
+    }, 600);
+  }
+
   $(function init() {
     const $grid = $('#clocks-grid');
     if (!$grid.length) return;
+
+    syncLcdModeFromCookie();
 
     models.forEach((model) => {
       const $card = buildClockCard(model);
       $grid.append($card);
     });
 
+    updateToggleUI();
+
+    $('#lcdToggle').on('click', () => {
+      const nextState = !lcdModeEnabled;
+      setLcdMode(nextState);
+      triggerToggleSpark();
+    });
+
     refreshFrames();
-    setInterval(refreshFrames, refreshInterval);
+    refreshTimerId = setInterval(refreshFrames, refreshInterval);
   });
 })(jQuery);
