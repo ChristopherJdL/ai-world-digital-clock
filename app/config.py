@@ -11,6 +11,12 @@ REFRESH_INTERVAL_MS = 60_000
 
 CLOCK_MODELS: List[Dict[str, str]] = [
     {
+        "id": "grok-4-fast",
+        "label": "Grok 4 Fast",
+        "logo": "grok-4-fast.png",
+        "provider": "xAI",
+    },
+    {
         "id": "deepseek-v3.2-exp",
         "label": "DeepSeek V3.2 Experimental",
         "logo": "deepseek-v3-2-exp.png",
@@ -21,12 +27,6 @@ CLOCK_MODELS: List[Dict[str, str]] = [
         "label": "Mistral Medium 3.1",
         "logo": "mistral-medium.png",
         "provider": "Mistral AI",
-    },
-    {
-        "id": "grok-4-fast",
-        "label": "Grok 4 Fast",
-        "logo": "grok-4-fast.png",
-        "provider": "xAI",
     },
     {
         "id": "gemini-2.5-flash",

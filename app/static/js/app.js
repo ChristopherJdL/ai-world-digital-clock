@@ -108,6 +108,13 @@
     });
   }
 
+  function restartRefreshTimer() {
+    if (refreshTimerId) {
+      clearInterval(refreshTimerId);
+    }
+    refreshTimerId = setInterval(refreshFrames, refreshInterval);
+  }
+
   function syncLcdModeFromCookie() {
     const cookieValue = getCookie('lcd_mode');
     if (cookieValue === null) {
@@ -118,12 +125,15 @@
     lcdModeEnabled = cookieValue === '1';
   }
 
-  function setLcdMode(enabled) {
+  function setLcdMode(enabled, options = {}) {
+    const { animate = false } = options;
     if (lcdModeEnabled === enabled) return;
     lcdModeEnabled = enabled;
     setCookie('lcd_mode', enabled ? '1' : '0', 365);
     updateToggleUI();
+    if (animate) triggerToggleBurst();
     refreshFrames();
+    restartRefreshTimer();
   }
 
   function updateToggleUI() {
@@ -133,13 +143,12 @@
     $toggle.toggleClass('is-active', lcdModeEnabled);
   }
 
-  function triggerToggleSpark() {
-    const $toggle = $('#lcdToggle');
-    if (!$toggle.length) return;
-    $toggle.addClass('is-sparking');
-    setTimeout(() => {
-      $toggle.removeClass('is-sparking');
-    }, 600);
+  function triggerToggleBurst() {
+    const animator = window.LcdBurstAnimator;
+    if (!animator || typeof animator.trigger !== 'function') return;
+    const trackEl = document.querySelector('#lcdToggle .lcd-toggle-track');
+    if (!trackEl) return;
+    animator.trigger(lcdModeEnabled, trackEl);
   }
 
   $(function init() {
@@ -157,11 +166,10 @@
 
     $('#lcdToggle').on('click', () => {
       const nextState = !lcdModeEnabled;
-      setLcdMode(nextState);
-      triggerToggleSpark();
+      setLcdMode(nextState, { animate: true });
     });
 
     refreshFrames();
-    refreshTimerId = setInterval(refreshFrames, refreshInterval);
+    restartRefreshTimer();
   });
 })(jQuery);

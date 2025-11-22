@@ -15,7 +15,6 @@
           <button id="lcdToggle" class="lcd-toggle" type="button" aria-pressed="false">
             <span class="lcd-toggle-track">
               <span class="lcd-toggle-thumb"></span>
-              <span class="lcd-toggle-spark"></span>
             </span>
             <span class="lcd-toggle-text">LCD mode</span>
           </button>
@@ -25,9 +24,11 @@
         <div id="clocks-grid" class="clocks-grid" aria-live="polite"></div>
       </main>
     </div>
+    <div id="lcdBurstCanvas" class="lcd-burst-canvas" aria-hidden="true"></div>
     <script>
       window.APP_CONFIG = {{ app_config | tojson }};
     </script>
+    <script src="{{ url_for('static', filename='js/lcd-animation.js') }}" defer></script>
     <script src="{{ url_for('static', filename='js/app.js') }}" defer></script>
   </body>
 </html>
